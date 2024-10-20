@@ -1,21 +1,16 @@
 -- задание 1
 
-SELECT c.id, c.name, COUNT(DISTINCT ga.id_genre)
-  FROM collection c
-       JOIN track_collection tc 
-       ON tc.id_collection = c.id 
-            JOIN track t
-            ON t.id = tc.id_track
-                 JOIN album al 
-                 ON al.id = t.id_album
-                      JOIN album_artist aa 
-                      ON aa.id_album = al.id 
-                           JOIN artist ar
-                           ON ar.id = aa.id_artist
-                                JOIN genre_artist ga 
-                                ON ga.id_artist = ar.id
- GROUP BY c.id;
-
+SELECT DISTINCT al.name 
+  FROM album al 
+       JOIN album_artist aa 
+       ON al.id = aa.id_album
+            JOIN artist ar 
+            ON ar.id = aa.id_artist
+                 JOIN genre_artist ga 
+                 ON ar.id = ga.id_artist 
+ GROUP BY al.name, ga.id_artist 
+HAVING COUNT(ga.id_genre) > 1;
+            
 -- задание 2
 
 DELETE FROM track_collection
@@ -42,17 +37,16 @@ SELECT ar.stage_name, MIN(t.duration)
   GROUP BY ar.id;
 
 -- задание 4
- 
-CREATE TABLE artist_tracknum
-AS SELECT a.name aname, COUNT(*) track_num
-     FROM album a
-     LEFT JOIN track t
-     ON t.id_album = a.id
-    GROUP BY a.id;
- 
-SELECT aname
-  FROM artist_tracknum
- WHERE track_num = (SELECT MIN(track_num) 
-                      FROM artist_tracknum);
 
-DROP TABLE artist_tracknum;
+SELECT a.name 
+  FROM album a
+       JOIN track t
+       ON t.id_album = a.id
+ GROUP BY a.id
+HAVING COUNT(*) = (
+     SELECT COUNT(*)
+       FROM track t
+      GROUP BY t.id_album 
+      ORDER BY 1
+      LIMIT 1
+);

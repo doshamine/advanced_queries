@@ -1,6 +1,6 @@
 CREATE TABLE artist (
 	id SERIAL PRIMARY KEY NOT NULL,
-	name VARCHAR(50) NOT NULL,
+	name VARCHAR(200) NOT NULL,
 	stage_name VARCHAR(50)
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE genre_artist (
 CREATE TABLE album (
 	id SERIAL PRIMARY KEY NOT NULL,
 	name VARCHAR(50) NOT NULL,
-	year INT
+	year INT CHECK (year > 1900)
 );
 
 
@@ -36,7 +36,7 @@ CREATE TABLE track (
 	id SERIAL PRIMARY KEY NOT NULL,
 	id_album INT NOT NULL REFERENCES album(id),
 	name VARCHAR(50) NOT NULL,
-	duration INT
+	duration INT CHECK (duration < 600)
 );
 
 

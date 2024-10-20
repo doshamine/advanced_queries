@@ -36,8 +36,28 @@ SELECT stage_name
    AND stage_name NOT LIKE '%.%';
 
 -- задание 5
+-- способ 1
   
 SELECT name
   FROM track
- WHERE name LIKE '%my%'
-    OR name LIKE '%мой%';
+ WHERE name ILIKE 'my %'
+ 	OR name ILIKE '% my'
+ 	OR name ILIKE 'my'
+ 	OR name ILIKE '% my %'
+ 	OR name ILIKE 'мой %'
+    OR name ILIKE '% мой'
+ 	OR name ILIKE 'мой'
+ 	OR name ILIKE '% мой %';
+ 	
+ -- способ 2
+ 
+SELECT name
+  FROM track
+ WHERE string_to_array(lower(name), ' ') && array['my', 'мой'];
+
+-- способ 3
+
+SELECT name
+  FROM track
+ WHERE name ~* '\m(my|мой)\M';
+ 

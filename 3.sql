@@ -24,13 +24,17 @@ SELECT a.id, a.name, AVG(t.duration)
 
 -- задание 4
 
-SELECT DISTINCT ar.stage_name
-  FROM artist ar
-       LEFT JOIN album_artist aa
-       ON aa.id_artist = ar.id
-            LEFT JOIN album al
-            ON al.id = aa.id_album 
- WHERE al.year != 2020;
+SELECT a.stage_name
+  FROM artist a
+ WHERE a.stage_name NOT IN (
+       SELECT ar.stage_name 
+         FROM artist ar
+             JOIN album_artist aa
+             ON aa.id_artist = ar.id
+                 JOIN album al
+                 ON al.id = aa.id_album
+        WHERE al.year = 2020
+);
 
 -- задание 5
 
@@ -47,6 +51,3 @@ SELECT DISTINCT c.name
                            JOIN artist ar 
                            ON ar.id = aa.id_artist 
  WHERE ar.stage_name = 'R.E.M.';
-
-
-  
